@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Planner v5</title>
+<style>
+:root{
+  --paper:#fbf6ec;
+  --ink:#2d302c;
+  --muted:#766f66;
+  --line:#cdbfad;
+  --head:#eee5d7;
+
+  --school:#c9d7e7;
+  --school-border:#aab9c9;
+
+  --physics:#d7b89e;
+  --math:#b8cfb1;
+  --chem:#dfbd94;
+  --special:#bfb2d7;
+  --weekend:#b9cfb1;
+
+  --normal:#cfe0c8;
+  --normal-border:#75936e;
+  --late:#efc2ba;
+  --late-border:#b95f50;
+  --miss:#ded8d0;
+  --miss-border:#9c958d;
+
+  --accent:#687b61;
+  --accent2:#9a735c;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  min-height:100vh;
+  padding:22px;
+  font-family:"Pretendard","Noto Sans KR","Apple SD Gothic Neo",sans-serif;
+  color:var(--ink);
+  background:
+    linear-gradient(rgba(255,255,255,.13),rgba(255,255,255,.13)),
+    repeating-linear-gradient(0deg,#c8b9a4 0,#c8b9a4 1px,#d3c4b1 1px,#d3c4b1 5px);
+}
+.planner{
+  width:min(1600px,100%);
+  margin:auto;
+  background:var(--paper);
+  border:1px solid rgba(90,72,55,.18);
+  border-radius:18px;
+  box-shadow:0 18px 48px rgba(72,61,49,.16);
+  overflow:hidden;
+}
+.topbar{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  padding:24px 30px 18px;border-bottom:1px solid var(--line);
+}
+.kicker{font-family:Georgia,serif;font-size:13px;letter-spacing:.18em;color:var(--accent2);font-weight:700}
+h1{margin:2px 0 0;font-family:Georgia,serif;font-size:38px;font-weight:500}
+.today-chip{font-size:13px;color:var(--muted)}
+.main{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(350px,.5fr);gap:24px;padding:24px 28px 28px}
+.panel{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.28)}
+.section-head{display:flex;justify-content:space-between;align-items:center;padding:15px 17px 11px}
+.section-head h2{margin:0;font-family:Georgia,serif;font-size:21px;font-weight:500}
+.section-head span{font-size:12px;color:var(--muted)}
+
+.schedule-area{padding:0 12px 10px;overflow:auto}
+.schedule-grid{
+  min-width:980px;
+  display:grid;
+  grid-template-columns:94px repeat(7,1fr);
+  grid-template-rows:38px repeat(8,47px) repeat(13,31px);
+  border:1px solid var(--line);
+  border-radius:12px;
+  overflow:hidden;
+  background:#fffdf8;
+  position:relative;
+}
+.cell{
+  border-right:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:4px 5px;
+  font-size:11px;
+  line-height:1.25;
+  position:relative;
+}
+.header{background:var(--head);font-weight:900;color:#514b44;font-size:12px}
+.time{
+  background:#f2eadf;
+  color:#716a61;
+  font-variant-numeric:tabular-nums;
+  flex-direction:column;
+}
+.time .period{font-size:9px;color:#9c9489;margin-bottom:2px}
+.course{
+  margin:2px;
+  border-radius:5px;
+  border:1px solid var(--school-border);
+  background:var(--school);
+  z-index:2;
+  flex-direction:column;
+  font-weight:800;
+}
+.course small{font-size:9px;color:#596675;margin-top:2px;font-weight:700}
+.study{
+  margin:2px;
+  border-radius:5px;
+  z-index:3;
+  flex-direction:column;
+  font-weight:900;
+  font-size:12px;
+  border:1px solid rgba(90,70,50,.18);
+}
+.study.physics{background:var(--physics)}
+.study.math{background:var(--math)}
+.study.chem{background:var(--chem)}
+.study.special{background:var(--special)}
+.study.weekend{background:var(--weekend)}
+.study .study-time{
+  font-size:11px;
+  font-weight:900;
+  margin-top:3px;
+  color:#332f2b;
+}
+.week-summary{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px 12px 14px
+}
+.sum{
+  border:1px solid var(--line);border-radius:10px;background:#f4eadf;
+  text-align:center;padding:11px 8px
+}
+.sum small{display:block;font-size:10px;color:var(--muted);font-weight:800;margin-bottom:4px}
+.sum strong{font-family:Georgia,serif;font-size:20px}
+.sum.total{background:#e5dbce}
+
+.right-col{display:grid;gap:18px;align-content:start}
+.today-card{padding:15px}
+.time-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.time-box{background:#fffaf3;border:1px solid var(--line);border-radius:10px;padding:12px}
+.time-box small{font-size:10px;color:var(--muted);font-weight:800}
+.time-box strong{display:block;margin-top:7px;font-family:Georgia,serif;font-size:25px;font-weight:600}
+.focus{display:flex;justify-content:space-between;align-items:center;padding-top:11px;margin-top:10px;border-top:1px dashed var(--line)}
+.focus span{font-size:11px;color:var(--muted);font-weight:700}
+.focus strong{font-family:Georgia,serif;font-size:23px}
+.buttons{display:grid;grid-template-columns:1fr 1fr 85px;gap:7px;margin-top:11px}
+button{border:0;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;font-weight:900;cursor:pointer}
+.in{background:var(--accent);color:#fff}.out{background:var(--accent2);color:#fff}.reset{background:#e8ddd0;color:#645d55}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:11px}
+.stat{border-top:2px solid #474a46;padding-top:7px}
+.stat small{font-size:9px;color:var(--muted);font-weight:700}
+.stat strong{display:block;margin-top:3px;font-family:Georgia,serif;font-size:19px}
+
+.calendar-card{padding:14px}
+.cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.cal-nav strong{font-family:Georgia,serif;font-size:20px}
+.cal-nav button{background:transparent;color:var(--muted);font-size:18px;padding:4px 7px}
+.weekdays,.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.weekdays div{text-align:center;font-size:9px;color:var(--muted);font-weight:900}
+.day{
+  aspect-ratio:1;
+  border:1px solid #d9cec0;
+  background:#fffaf3;
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;font-size:11px;font-weight:700;
+  cursor:pointer;
+}
+.day.blank{border-color:transparent;background:transparent}
+.day.future{color:#b6ada2;background:#f2e9dd}
+.day.today{box-shadow:inset 0 0 0 3px #4f5c4a;font-weight:900}
+.day.normal{background:var(--normal);border:2px solid var(--normal-border);color:#385133}
+.day.late{background:var(--late);border:2px solid var(--late-border);color:#7c3025;font-weight:900}
+.day.miss{background:var(--miss);border:2px solid var(--miss-border);color:#5e5953}
+.badge{
+  position:absolute;bottom:2px;left:50%;transform:translateX(-50%);
+  font-size:7px;line-height:1;font-weight:900;
+}
+.legend{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px;font-size:9px;color:var(--muted);font-weight:700}
+.legend span{display:flex;align-items:center;gap:4px}
+.legend i{width:9px;height:9px;border-radius:3px;display:inline-block;border:1px solid}
+.lg-normal{background:var(--normal);border-color:var(--normal-border)!important}
+.lg-late{background:var(--late);border-color:var(--late-border)!important}
+.lg-miss{background:var(--miss);border-color:var(--miss-border)!important}
+
+.detail{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+.detail-title{font-family:Georgia,serif;font-size:17px;margin-bottom:7px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.detail-item{background:#fffaf3;border:1px solid var(--line);border-radius:8px;padding:8px}
+.detail-item small{display:block;font-size:9px;color:var(--muted);font-weight:700}
+.detail-item strong{font-size:13px}
+.manual{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+.manual input{width:100%;border:1px solid var(--line);border-radius:8px;background:#fffaf3;padding:8px;font:inherit;font-size:11px}
+.manual button{grid-column:1/-1;background:#4c514b;color:white}
+.rules{padding:13px 15px;border-left:3px solid var(--accent2);background:#ecdfd1;font-size:11px;line-height:1.6;color:#625b53}
+.footer{padding:0 28px 20px;text-align:right;font-size:10px;color:var(--muted)}
+@media(max-width:1150px){.main{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="planner">
+  <div class="topbar">
+    <div>
+      <div class="kicker">SCHOOL & STUDY ROUTINE</div>
+      <h1>Study Planner</h1>
+    </div>
+    <div class="today-chip" id="todayText"></div>
+  </div>
+
+  <div class="main">
+    <section class="panel">
+      <div class="section-head">
+        <h2>Weekly Schedule</h2>
+        <span>학교 시간표 + 방과 후 공부계획</span>
+      </div>
+
+      <div class="schedule-area">
+        <div class="schedule-grid" id="schedule"></div>
+      </div>
+
+      <div class="week-summary">
+        <div class="sum"><small>PHYSICS / 주당</small><strong>11h</strong></div>
+        <div class="sum"><small>MATH / 주당</small><strong>8h 30m</strong></div>
+        <div class="sum"><small>CHEMISTRY / 주당</small><strong>7h 30m</strong></div>
+        <div class="sum total"><small>TOTAL / 서특·현강 제외</small><strong>27h</strong></div>
+      </div>
+    </section>
+
+    <aside class="right-col">
+      <section class="panel today-card">
+        <div class="section-head" style="padding:0 0 11px">
+          <h2>Today's Record</h2><span>실제 공부 기록</span>
+        </div>
+        <div class="time-grid">
+          <div class="time-box"><small>CHECK IN</small><strong id="inTime">--:--</strong></div>
+          <div class="time-box"><small>CHECK OUT</small><strong id="outTime">--:--</strong></div>
+        </div>
+        <div class="focus"><span>오늘 순공부시간</span><strong id="focusTime">0h 00m</strong></div>
+        <div class="buttons">
+          <button class="in" onclick="checkIn()">입실</button>
+          <button class="out" onclick="checkOut()">퇴실</button>
+          <button class="reset" onclick="resetToday()">초기화</button>
+        </div>
+        <div class="stats">
+          <div class="stat"><small>이번 주</small><strong id="weekTotal">0h</strong></div>
+          <div class="stat"><small>이번 달</small><strong id="monthTotal">0h</strong></div>
+          <div class="stat"><small>지각</small><strong id="lateCount">0회</strong></div>
+        </div>
+      </section>
+
+      <section class="panel calendar-card">
+        <div class="cal-nav">
+          <button onclick="moveMonth(-1)">‹</button>
+          <strong id="monthTitle"></strong>
+          <button onclick="moveMonth(1)">›</button>
+        </div>
+        <div class="weekdays">
+          <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
+        </div>
+        <div class="calendar" id="calendar"></div>
+        <div class="legend">
+          <span><i class="lg-normal"></i>정상</span>
+          <span><i class="lg-late"></i>지각</span>
+          <span><i class="lg-miss"></i>미입실</span>
+        </div>
+
+        <div class="detail">
+          <div class="detail-title" id="detailTitle">오늘</div>
+          <div class="detail-grid">
+            <div class="detail-item"><small>입실</small><strong id="detailIn">--:--</strong></div>
+            <div class="detail-item"><small>퇴실</small><strong id="detailOut">--:--</strong></div>
+            <div class="detail-item"><small>순공부</small><strong id="detailFocus">0h 00m</strong></div>
+            <div class="detail-item"><small>상태</small><strong id="detailStatus">-</strong></div>
+          </div>
+        </div>
+
+        <div class="manual">
+          <input type="date" id="manualDate">
+          <input type="number" min="0" id="manualBreak" placeholder="휴식(분)">
+          <input type="time" id="manualIn">
+          <input type="time" id="manualOut">
+          <button onclick="addManual()">수동 기록 추가</button>
+        </div>
+      </section>
+
+      <div class="rules">
+        <b>입실 기준</b><br>
+        월 17:00 · 화 19:00 · 수 18:00 · 목 17:00 · 금 19:00<br>
+        토·일은 지각 판정 없이 3부제로 표시합니다.
+      </div>
+    </aside>
+  </div>
+
+  <div class="footer">기록은 현재 브라우저 localStorage에 저장됩니다.</div>
+</div>
+
+<script>
+/* ---------- schedule grid ---------- */
+const schedule = document.getElementById("schedule");
+const days = ["","MON","TUE","WED","THU","FRI","SAT","SUN"];
+const schoolTimes = [
+  ["1교시","09:00~09:50"],["2교시","10:00~10:50"],["3교시","11:00~11:50"],["4교시","12:00~12:50"],
+  ["5교시","13:00~13:50"],["6교시","14:00~14:50"],["7교시","15:00~15:50"],["8교시","16:00~16:50"]
+];
+const afterTimes = [
+  "17:00~17:30","17:30~18:00","18:00~18:30","18:30~19:00","19:00~19:30","19:30~20:00",
+  "20:00~20:30","20:30~21:00","21:00~21:30","21:30~22:00","22:00~22:30","22:30~23:00","23:00~23:30"
+];
+
+function addBase(){
+  days.forEach((d,c)=>{
+    const e=document.createElement("div");
+    e.className="cell header";
+    e.style.gridColumn=c+1;e.style.gridRow=1;e.textContent=c===0?"TIME":d;
+    schedule.appendChild(e);
+  });
+  schoolTimes.forEach((t,i)=>{
+    const row=i+2;
+    const time=document.createElement("div");
+    time.className="cell time";
+    time.style.gridColumn=1;time.style.gridRow=row;
+    time.innerHTML=`<span class="period">${t[0]}</span>${t[1]}`;
+    schedule.appendChild(time);
+    for(let c=2;c<=8;c++){
+      const e=document.createElement("div");
+      e.className="cell";
+      e.style.gridColumn=c;e.style.gridRow=row;
+      schedule.appendChild(e);
+    }
+  });
+  afterTimes.forEach((t,i)=>{
+    const row=10+i;
+    const time=document.createElement("div");
+    time.className="cell time";
+    time.style.gridColumn=1;time.style.gridRow=row;
+    time.textContent=t;
+    schedule.appendChild(time);
+    for(let c=2;c<=8;c++){
+      const e=document.createElement("div");
+      e.className="cell";
+      e.style.gridColumn=c;e.style.gridRow=row;
+      schedule.appendChild(e);
+    }
+  });
+}
+function block(col,rowStart,rowEnd,cls,html){
+  const e=document.createElement("div");
+  e.className=`cell ${cls}`;
+  e.style.gridColumn=col;
+  e.style.gridRow=`${rowStart} / ${rowEnd}`;
+  e.innerHTML=html;
+  schedule.appendChild(e);
+}
+addBase();
+
+/* school */
+block(2,3,5,"course","대학화학(2)<small>하윤경 · R320</small>");
+block(2,6,7,"course","응용수학(2)<small>조향감 · R318</small>");
+block(3,3,5,"course","유체역학(1)<small>신승원 · K103</small>");
+block(3,7,10,"course","선형대수학<small>백승민 · T1001</small>");
+block(4,3,4,"course","대학화학(2)<small>하윤경 · R320</small>");
+block(4,4,5,"course","고체역학(2)<small>이혁 · K105</small>");
+block(4,7,8,"course","동역학<small>배윤혁 · K105</small>");
+block(5,3,4,"course","유체역학(1)<small>신승원 · K103</small>");
+block(5,5,7,"course","응용수학(2)<small>조향감 · R318</small>");
+block(6,3,5,"course","고체역학(2)<small>이혁 · K103</small>");
+block(6,7,9,"course","동역학<small>배윤혁 · K105</small>");
+
+/* weekday study: row 10 = 17:00~17:30 */
+block(2,10,16,"study physics","물리<span class='study-time'>17:00~20:00</span>");
+block(2,16,23,"study chem","화학<span class='study-time'>20:00~23:30</span>");
+
+block(3,14,23,"study special","서특<span class='study-time'>19:00~23:30</span>");
+
+block(4,12,16,"study physics","물리<span class='study-time'>18:00~20:00</span>");
+block(4,16,23,"study math","수학<span class='study-time'>20:00~23:30</span>");
+
+block(5,10,15,"study math","수학<span class='study-time'>17:00~19:30</span>");
+block(5,15,23,"study chem","화학<span class='study-time'>19:30~23:30</span>");
+
+block(6,14,18,"study physics","물리<span class='study-time'>19:00~21:00</span>");
+block(6,18,23,"study math","수학<span class='study-time'>21:00~23:30</span>");
+
+/* weekend 3-part fixed cards */
+block(7,2,6,"study weekend","물리 현강<span class='study-time'>1부 · 07:30~12:30</span>");
+block(8,2,6,"study weekend","물리 현강<span class='study-time'>1부 · 07:30~12:30</span>");
+
+block(7,6,10,"study physics","물리<span class='study-time'>2부 · 13:00~17:00</span>");
+block(8,6,10,"study special","서특<span class='study-time'>2부 · 13:00~17:00</span>");
+
+block(7,12,20,"study chem","화학 현강<span class='study-time'>3부 · 18:00~22:00</span>");
+block(8,12,20,"study chem","화학 현강<span class='study-time'>3부 · 18:00~22:00</span>");
+
+/* ---------- records ---------- */
+const KEY="studyPlannerCombined_v5";
+let records=JSON.parse(localStorage.getItem(KEY)||"{}");
+let viewDate=new Date();
+let selectedKey=keyOf(new Date());
+
+function pad(n){return String(n).padStart(2,"0")}
+function keyOf(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
+function nowTime(){const d=new Date();return `${pad(d.getHours())}:${pad(d.getMinutes())}`}
+function save(){localStorage.setItem(KEY,JSON.stringify(records));render()}
+function mins(a,b){
+  if(!a||!b)return 0;
+  const [ah,am]=a.split(":").map(Number),[bh,bm]=b.split(":").map(Number);
+  let x=(bh*60+bm)-(ah*60+am); if(x<0)x+=1440; return x;
+}
+function focus(r){return r&&r.in&&r.out?Math.max(0,mins(r.in,r.out)-(Number(r.breakMin)||0)):0}
+function fmt(m){m=Math.max(0,Math.round(m||0));return `${Math.floor(m/60)}h ${pad(m%60)}m`}
+function limitFor(day){return {1:"17:00",2:"19:00",3:"18:00",4:"17:00",5:"19:00"}[day]||null}
+function statusOf(k,r){
+  const d=new Date(k+"T00:00:00"),lim=limitFor(d.getDay());
+  if(!lim)return r&&r.in?"자율":"-";
+  if(!r||!r.in){
+    const t=new Date();t.setHours(0,0,0,0);
+    return d<t?"미입실":"-";
+  }
+  return r.in<=lim?"정상":"지각";
+}
+function checkIn(){
+  const k=keyOf(new Date());records[k]=records[k]||{};records[k].in=nowTime();selectedKey=k;save();
+}
+function checkOut(){
+  const k=keyOf(new Date());records[k]=records[k]||{};records[k].out=nowTime();records[k].breakMin=records[k].breakMin||0;selectedKey=k;save();
+}
+function resetToday(){
+  const k=keyOf(new Date());
+  if(confirm("오늘 기록을 초기화할까요?")){delete records[k];selectedKey=k;save()}
+}
+function addManual(){
+  const d=document.getElementById("manualDate").value;
+  const i=document.getElementById("manualIn").value;
+  const o=document.getElementById("manualOut").value;
+  const b=Number(document.getElementById("manualBreak").value||0);
+  if(!d||!i||!o){alert("날짜, 입실, 퇴실 시간을 입력해주세요.");return}
+  records[d]={in:i,out:o,breakMin:b};selectedKey=d;save();
+}
+function monday(d){
+  const x=new Date(d),delta=(x.getDay()+6)%7;
+  x.setHours(0,0,0,0);x.setDate(x.getDate()-delta);return x;
+}
+function renderToday(){
+  const now=new Date(),k=keyOf(now),r=records[k]||{},wd=["일","월","화","수","목","금","토"];
+  document.getElementById("todayText").textContent=`${now.getFullYear()}.${pad(now.getMonth()+1)}.${pad(now.getDate())} (${wd[now.getDay()]})`;
+  document.getElementById("inTime").textContent=r.in||"--:--";
+  document.getElementById("outTime").textContent=r.out||"--:--";
+  document.getElementById("focusTime").textContent=fmt(focus(r));
+  document.getElementById("manualDate").value=k;
+}
+function renderStats(){
+  const now=new Date(),ws=monday(now),we=new Date(ws);we.setDate(we.getDate()+6);
+  let wt=0,mt=0,late=0;
+  Object.entries(records).forEach(([k,r])=>{
+    const d=new Date(k+"T00:00:00"),f=focus(r);
+    if(d>=ws&&d<=we)wt+=f;
+    if(d.getFullYear()===viewDate.getFullYear()&&d.getMonth()===viewDate.getMonth()){
+      mt+=f;if(statusOf(k,r)==="지각")late++;
+    }
+  });
+  weekTotal.textContent=fmt(wt);monthTotal.textContent=fmt(mt);lateCount.textContent=late+"회";
+}
+function moveMonth(n){viewDate=new Date(viewDate.getFullYear(),viewDate.getMonth()+n,1);renderCalendar();renderStats()}
+function renderCalendar(){
+  const y=viewDate.getFullYear(),m=viewDate.getMonth();
+  monthTitle.textContent=`${y}.${pad(m+1)}`;
+  const first=new Date(y,m,1).getDay(),daysInMonth=new Date(y,m+1,0).getDate();
+  let html="";
+  for(let i=0;i<first;i++)html+='<div class="day blank"></div>';
+  const today=new Date();today.setHours(0,0,0,0);
+  for(let d=1;d<=daysInMonth;d++){
+    const dt=new Date(y,m,d),k=keyOf(dt),r=records[k],st=statusOf(k,r);
+    let cls="",badge="";
+    if(st==="정상"){cls="normal";badge="정상"}
+    else if(st==="지각"){cls="late";badge="지각"}
+    else if(st==="미입실"){cls="miss";badge="미입실"}
+    if(dt>today)cls+=" future";
+    if(k===keyOf(today))cls+=" today";
+    html+=`<div class="day ${cls}" onclick="selectDay('${k}')">${d}${badge?`<span class="badge">${badge}</span>`:""}</div>`;
+  }
+  calendar.innerHTML=html;
+}
+function selectDay(k){selectedKey=k;renderDetail()}
+function renderDetail(){
+  const r=records[selectedKey]||{},st=statusOf(selectedKey,r),d=new Date(selectedKey+"T00:00:00");
+  detailTitle.textContent=`${d.getMonth()+1}월 ${d.getDate()}일`;
+  detailIn.textContent=r.in||"--:--";detailOut.textContent=r.out||"--:--";
+  detailFocus.textContent=fmt(focus(r));detailStatus.textContent=st;
+}
+function render(){renderToday();renderStats();renderCalendar();renderDetail()}
+render();
+</script>
+</body>
+</html>
