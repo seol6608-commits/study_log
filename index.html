@@ -199,6 +199,16 @@ button{border:0;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;
 .footer{padding:0 28px 20px;text-align:right;font-size:10px;color:var(--muted)}
 @media(max-width:1150px){.main{grid-template-columns:1fr}}
 </style>
+
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#687b61">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Study Planner">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+
 </head>
 <body>
 <div class="planner">
@@ -493,5 +503,14 @@ function renderDetail(){
 function render(){renderToday();renderStats();renderCalendar();renderDetail()}
 render();
 </script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(console.error);
+  });
+}
+</script>
+
 </body>
 </html>
