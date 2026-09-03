@@ -69,7 +69,7 @@ h1{margin:2px 0 0;font-family:Georgia,serif;font-size:38px;font-weight:500}
   min-width:980px;
   display:grid;
   grid-template-columns:94px repeat(7,1fr);
-  grid-template-rows:38px repeat(8,47px) repeat(13,31px);
+  grid-template-rows:38px repeat(8,47px) repeat(17,31px);
   border:1px solid var(--line);
   border-radius:12px;
   overflow:hidden;
@@ -200,7 +200,7 @@ button{border:0;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;
 @media(max-width:1150px){.main{grid-template-columns:1fr}}
 </style>
 
-<link rel="manifest" href="./manifest.json?v=2">
+<link rel="manifest" href="./manifest.json?v=3">
 <meta name="theme-color" content="#687b61">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -233,9 +233,9 @@ button{border:0;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;
 
       <div class="week-summary">
         <div class="sum"><small>PHYSICS / 주당</small><strong>11h</strong></div>
-        <div class="sum"><small>MATH / 주당</small><strong>8h 30m</strong></div>
+        <div class="sum"><small>MATH / 주당</small><strong>10h 30m</strong></div>
         <div class="sum"><small>CHEMISTRY / 주당</small><strong>7h 30m</strong></div>
-        <div class="sum total"><small>TOTAL / 서특·현강 제외</small><strong>27h</strong></div>
+        <div class="sum total"><small>TOTAL / 서특·현강 제외</small><strong>29h</strong></div>
       </div>
     </section>
 
@@ -298,7 +298,7 @@ button{border:0;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;
 
       <div class="rules">
         <b>입실 기준</b><br>
-        월 17:00 · 화 19:00 · 수 18:00 · 목 17:00 · 금 19:00<br>
+        월 15:00 · 화 19:00 · 수 18:00 · 목 17:00 · 금 19:00<br>
         토·일은 지각 판정 없이 3부제로 표시합니다.
       </div>
     </aside>
@@ -316,6 +316,7 @@ const schoolTimes = [
   ["5교시","13:00~13:50"],["6교시","14:00~14:50"],["7교시","15:00~15:50"],["8교시","16:00~16:50"]
 ];
 const afterTimes = [
+  "15:00~15:30","15:30~16:00","16:00~16:30","16:30~17:00",
   "17:00~17:30","17:30~18:00","18:00~18:30","18:30~19:00","19:00~19:30","19:30~20:00",
   "20:00~20:30","20:30~21:00","21:00~21:30","21:30~22:00","22:00~22:30","22:30~23:00","23:00~23:30"
 ];
@@ -368,31 +369,32 @@ addBase();
 
 /* school */
 block(2,3,5,"course","대학화학(2)<small>하윤경 · R320</small>");
-block(2,6,7,"course","응용수학(2)<small>조향감 · R318</small>");
 block(3,3,5,"course","유체역학(1)<small>신승원 · K103</small>");
+block(3,6,7,"course","응용수학(2)<small>유다혜 · R319</small>");
 block(3,7,10,"course","선형대수학<small>백승민 · T1001</small>");
 block(4,3,4,"course","대학화학(2)<small>하윤경 · R320</small>");
 block(4,4,5,"course","고체역학(2)<small>이혁 · K105</small>");
 block(4,7,8,"course","동역학<small>배윤혁 · K105</small>");
 block(5,3,4,"course","유체역학(1)<small>신승원 · K103</small>");
-block(5,5,7,"course","응용수학(2)<small>조향감 · R318</small>");
+block(5,5,7,"course","응용수학(2)<small>유다혜 · R319</small>");
 block(6,3,5,"course","고체역학(2)<small>이혁 · K103</small>");
 block(6,7,9,"course","동역학<small>배윤혁 · K105</small>");
 
-/* weekday study: row 10 = 17:00~17:30 */
-block(2,10,16,"study physics","물리<span class='study-time'>17:00~20:00</span>");
-block(2,16,23,"study chem","화학<span class='study-time'>20:00~23:30</span>");
+/* weekday study final */
+block(2,10,14,"study math","수학<span class='study-time'>15:00~17:00</span>");
+block(2,14,20,"study physics","물리<span class='study-time'>17:00~20:00</span>");
+block(2,20,27,"study chem","화학<span class='study-time'>20:00~23:30</span>");
 
-block(3,14,23,"study special","서특<span class='study-time'>19:00~23:30</span>");
+block(3,18,27,"study special","서특<span class='study-time'>19:00~23:30</span>");
 
-block(4,12,16,"study physics","물리<span class='study-time'>18:00~20:00</span>");
-block(4,16,23,"study math","수학<span class='study-time'>20:00~23:30</span>");
+block(4,16,20,"study physics","물리<span class='study-time'>18:00~20:00</span>");
+block(4,20,27,"study math","수학<span class='study-time'>20:00~23:30</span>");
 
-block(5,10,15,"study math","수학<span class='study-time'>17:00~19:30</span>");
-block(5,15,23,"study chem","화학<span class='study-time'>19:30~23:30</span>");
+block(5,14,19,"study math","수학<span class='study-time'>17:00~19:30</span>");
+block(5,19,27,"study chem","화학<span class='study-time'>19:30~23:30</span>");
 
-block(6,14,18,"study physics","물리<span class='study-time'>19:00~21:00</span>");
-block(6,18,23,"study math","수학<span class='study-time'>21:00~23:30</span>");
+block(6,18,22,"study physics","물리<span class='study-time'>19:00~21:00</span>");
+block(6,22,27,"study math","수학<span class='study-time'>21:00~23:30</span>");
 
 /* weekend 3-part fixed cards */
 block(7,2,6,"study weekend","물리 현강<span class='study-time'>1부 · 07:30~12:30</span>");
@@ -401,8 +403,8 @@ block(8,2,6,"study weekend","물리 현강<span class='study-time'>1부 · 07:30
 block(7,6,10,"study physics","물리<span class='study-time'>2부 · 13:00~17:00</span>");
 block(8,6,10,"study special","서특<span class='study-time'>2부 · 13:00~17:00</span>");
 
-block(7,12,20,"study chem","화학 현강<span class='study-time'>3부 · 18:00~22:00</span>");
-block(8,12,20,"study chem","화학 현강<span class='study-time'>3부 · 18:00~22:00</span>");
+block(7,16,24,"study chem","화학 현강<span class='study-time'>3부 · 18:00~22:00</span>");
+block(8,16,24,"study chem","화학 현강<span class='study-time'>3부 · 18:00~22:00</span>");
 
 /* ---------- records ---------- */
 const KEY="studyPlannerCombined_v5";
@@ -421,7 +423,7 @@ function mins(a,b){
 }
 function focus(r){return r&&r.in&&r.out?Math.max(0,mins(r.in,r.out)-(Number(r.breakMin)||0)):0}
 function fmt(m){m=Math.max(0,Math.round(m||0));return `${Math.floor(m/60)}h ${pad(m%60)}m`}
-function limitFor(day){return {1:"17:00",2:"19:00",3:"18:00",4:"17:00",5:"19:00"}[day]||null}
+function limitFor(day){return {1:"15:00",2:"19:00",3:"18:00",4:"17:00",5:"19:00"}[day]||null}
 function statusOf(k,r){
   const d=new Date(k+"T00:00:00"),lim=limitFor(d.getDay());
   if(!lim)return r&&r.in?"자율":"-";
@@ -507,7 +509,7 @@ render();
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js').catch(console.error);
+    navigator.serviceWorker.register('./service-worker.js?v=3').catch(console.error);
   });
 }
 </script>
