@@ -200,7 +200,7 @@ button{border:0;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;
 @media(max-width:1150px){.main{grid-template-columns:1fr}}
 </style>
 
-<link rel="manifest" href="./manifest.json?v=4">
+<link rel="manifest" href="./manifest.json?v=5">
 <meta name="theme-color" content="#687b61">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -410,8 +410,8 @@ block(6,22,27,"study math","수학 · 파트별 다지기<span class='study-time
 block(7,2,6,"study weekend","물리 현강<span class='study-time'>1부 · 07:30~12:30</span>");
 block(8,2,6,"study weekend","물리 현강<span class='study-time'>1부 · 07:30~12:30</span>");
 
-block(7,6,10,"study physics","물리 · 진도 맞춰 시험대비<span class='study-time'>2부 · 13:00~17:00</span>");
-block(8,6,10,"study special","서특<span class='study-time'>2부 · 13:00~17:00</span>");
+block(7,6,14,"study physics","물리 · 진도 맞춰 시험대비<span class='study-time'>2부 · 13:00~17:00</span>");
+block(8,6,14,"study special","서특<span class='study-time'>2부 · 13:00~17:00</span>");
 
 block(7,16,24,"study chem","화학 현강<span class='study-time'>3부 · 18:00~22:00</span>");
 block(8,16,24,"study chem","화학 현강<span class='study-time'>3부 · 18:00~22:00</span>");
@@ -519,7 +519,7 @@ render();
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js?v=4').catch(console.error);
+    navigator.serviceWorker.register('./service-worker.js?v=5').catch(console.error);
   });
 }
 </script>
