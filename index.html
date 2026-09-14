@@ -200,7 +200,7 @@ button{border:0;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;
 @media(max-width:1150px){.main{grid-template-columns:1fr}}
 </style>
 
-<link rel="manifest" href="./manifest.json?v=3">
+<link rel="manifest" href="./manifest.json?v=4">
 <meta name="theme-color" content="#687b61">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -232,9 +232,9 @@ button{border:0;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;
       </div>
 
       <div class="week-summary">
-        <div class="sum"><small>PHYSICS / 주당</small><strong>11h</strong></div>
-        <div class="sum"><small>MATH / 주당</small><strong>10h 30m</strong></div>
-        <div class="sum"><small>CHEMISTRY / 주당</small><strong>7h 30m</strong></div>
+        <div class="sum"><small>PHYSICS / 주당</small><strong>12h 30m</strong></div>
+        <div class="sum"><small>MATH / 주당</small><strong>9h 30m</strong></div>
+        <div class="sum"><small>CHEMISTRY / 주당</small><strong>7h</strong></div>
         <div class="sum total"><small>TOTAL / 서특·현강 제외</small><strong>29h</strong></div>
       </div>
     </section>
@@ -381,26 +381,36 @@ block(6,3,5,"course","고체역학(2)<small>이혁 · K103</small>");
 block(6,7,9,"course","동역학<small>배윤혁 · K105</small>");
 
 /* weekday study final */
-block(2,10,14,"study math","수학<span class='study-time'>15:00~17:00</span>");
-block(2,14,20,"study physics","물리<span class='study-time'>17:00~20:00</span>");
-block(2,20,27,"study chem","화학<span class='study-time'>20:00~23:30</span>");
+/* MON */
+block(2,10,13,"study math","수학 · 기출<span class='study-time'>15:00~16:30</span>");
+block(2,13,16,"study physics","물리 · 2nd 트랙<span class='study-time'>16:30~18:00</span>");
+block(2,16,20,"study chem","화학 · 개념복습<span class='study-time'>18:00~20:00</span>");
+block(2,20,23,"study physics","물리 · 2nd 트랙<span class='study-time'>20:00~21:30</span>");
+block(2,23,27,"study chem","화학 · 기출<span class='study-time'>21:30~23:30</span>");
 
+/* TUE */
 block(3,18,27,"study special","서특<span class='study-time'>19:00~23:30</span>");
 
-block(4,16,20,"study physics","물리<span class='study-time'>18:00~20:00</span>");
-block(4,20,27,"study math","수학<span class='study-time'>20:00~23:30</span>");
+/* WED */
+block(4,16,20,"study math","수학 · 기출<span class='study-time'>18:00~20:00</span>");
+block(4,20,24,"study physics","물리 · 2nd 트랙<span class='study-time'>20:00~22:00</span>");
+block(4,24,27,"study chem","화학 · 기출<span class='study-time'>22:00~23:30</span>");
 
-block(5,14,19,"study math","수학<span class='study-time'>17:00~19:30</span>");
-block(5,19,27,"study chem","화학<span class='study-time'>19:30~23:30</span>");
+/* THU */
+block(5,14,17,"study math","수학 · 기출<span class='study-time'>17:00~18:30</span>");
+block(5,17,20,"study physics","물리 · 2nd 트랙<span class='study-time'>18:30~20:00</span>");
+block(5,20,24,"study math","수학 · 파트별 다지기<span class='study-time'>20:00~22:00</span>");
+block(5,24,27,"study chem","화학 · 기출<span class='study-time'>22:00~23:30</span>");
 
-block(6,18,22,"study physics","물리<span class='study-time'>19:00~21:00</span>");
-block(6,22,27,"study math","수학<span class='study-time'>21:00~23:30</span>");
+/* FRI */
+block(6,18,22,"study physics","물리 · 진도 맞춰 시험대비<span class='study-time'>19:00~21:00</span>");
+block(6,22,27,"study math","수학 · 파트별 다지기<span class='study-time'>21:00~23:30</span>");
 
 /* weekend 3-part fixed cards */
 block(7,2,6,"study weekend","물리 현강<span class='study-time'>1부 · 07:30~12:30</span>");
 block(8,2,6,"study weekend","물리 현강<span class='study-time'>1부 · 07:30~12:30</span>");
 
-block(7,6,10,"study physics","물리<span class='study-time'>2부 · 13:00~17:00</span>");
+block(7,6,10,"study physics","물리 · 진도 맞춰 시험대비<span class='study-time'>2부 · 13:00~17:00</span>");
 block(8,6,10,"study special","서특<span class='study-time'>2부 · 13:00~17:00</span>");
 
 block(7,16,24,"study chem","화학 현강<span class='study-time'>3부 · 18:00~22:00</span>");
@@ -509,7 +519,7 @@ render();
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js?v=3').catch(console.error);
+    navigator.serviceWorker.register('./service-worker.js?v=4').catch(console.error);
   });
 }
 </script>
