@@ -1,8 +1,8 @@
-const CACHE_NAME = 'study-log-v5';
+const CACHE_NAME = 'study-log-v6';
 const ASSETS = [
   './',
   './index.html',
-  './manifest.json?v=5',
+  './manifest.json?v=6',
   './icon-192.png',
   './icon-512.png'
 ];

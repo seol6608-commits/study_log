@@ -69,7 +69,7 @@ h1{margin:2px 0 0;font-family:Georgia,serif;font-size:38px;font-weight:500}
   min-width:980px;
   display:grid;
   grid-template-columns:94px repeat(7,1fr);
-  grid-template-rows:38px repeat(8,47px) repeat(17,31px);
+  grid-template-rows:38px repeat(8,47px) repeat(18,31px);
   border:1px solid var(--line);
   border-radius:12px;
   overflow:hidden;
@@ -200,7 +200,7 @@ button{border:0;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;
 @media(max-width:1150px){.main{grid-template-columns:1fr}}
 </style>
 
-<link rel="manifest" href="./manifest.json?v=5">
+<link rel="manifest" href="./manifest.json?v=6">
 <meta name="theme-color" content="#687b61">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -232,10 +232,10 @@ button{border:0;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;
       </div>
 
       <div class="week-summary">
-        <div class="sum"><small>PHYSICS / 주당</small><strong>12h 30m</strong></div>
-        <div class="sum"><small>MATH / 주당</small><strong>9h 30m</strong></div>
+        <div class="sum"><small>PHYSICS / 주당</small><strong>15h 30m</strong></div>
+        <div class="sum"><small>MATH / 주당</small><strong>10h</strong></div>
         <div class="sum"><small>CHEMISTRY / 주당</small><strong>7h</strong></div>
-        <div class="sum total"><small>TOTAL / 서특·현강 제외</small><strong>29h</strong></div>
+        <div class="sum total"><small>TOTAL / 별도수학·현강 제외</small><strong>32h 30m</strong></div>
       </div>
     </section>
 
@@ -318,7 +318,7 @@ const schoolTimes = [
 const afterTimes = [
   "15:00~15:30","15:30~16:00","16:00~16:30","16:30~17:00",
   "17:00~17:30","17:30~18:00","18:00~18:30","18:30~19:00","19:00~19:30","19:30~20:00",
-  "20:00~20:30","20:30~21:00","21:00~21:30","21:30~22:00","22:00~22:30","22:30~23:00","23:00~23:30"
+  "20:00~20:30","20:30~21:00","21:00~21:30","21:30~22:00","22:00~22:30","22:30~23:00","23:00~23:30","23:30~24:00"
 ];
 
 function addBase(){
@@ -382,29 +382,29 @@ block(6,7,9,"course","동역학<small>배윤혁 · K105</small>");
 
 /* weekday study final */
 /* MON */
-block(2,10,13,"study math","수학 · 기출<span class='study-time'>15:00~16:30</span>");
-block(2,13,16,"study physics","물리 · 2nd 트랙<span class='study-time'>16:30~18:00</span>");
-block(2,16,20,"study chem","화학 · 개념복습<span class='study-time'>18:00~20:00</span>");
-block(2,20,23,"study physics","물리 · 2nd 트랙<span class='study-time'>20:00~21:30</span>");
-block(2,23,27,"study chem","화학 · 기출<span class='study-time'>21:30~23:30</span>");
+block(2,10,16,"study math","수학 · 학교별 기출<span class='study-time'>15:00~18:00</span>");
+block(2,16,22,"study physics","물리 · Young/Haliday 모의고사<span class='study-time'>18:00~21:00</span>");
+block(2,22,25,"study math","수학 · 파트별 다지기<span class='study-time'>21:00~22:30</span>");
+block(2,25,28,"study chem","화학<span class='study-time'>22:30~24:00</span>");
 
 /* TUE */
-block(3,18,27,"study special","서특<span class='study-time'>19:00~23:30</span>");
+block(3,18,25,"study math","수학 · 연고대 기출<span class='study-time'>19:00~22:30 · 공부시간 계산 제외</span>");
+block(3,25,28,"study chem","화학<span class='study-time'>22:30~24:00</span>");
 
 /* WED */
-block(4,16,20,"study math","수학 · 기출<span class='study-time'>18:00~20:00</span>");
-block(4,20,24,"study physics","물리 · 2nd 트랙<span class='study-time'>20:00~22:00</span>");
-block(4,24,27,"study chem","화학 · 기출<span class='study-time'>22:00~23:30</span>");
+block(4,16,20,"study math","수학 · 학교별 기출<span class='study-time'>18:00~20:00</span>");
+block(4,20,25,"study physics","물리 · Young/Haliday 모의고사<span class='study-time'>20:00~22:30</span>");
+block(4,25,28,"study chem","화학<span class='study-time'>22:30~24:00</span>");
 
 /* THU */
-block(5,14,17,"study math","수학 · 기출<span class='study-time'>17:00~18:30</span>");
-block(5,17,20,"study physics","물리 · 2nd 트랙<span class='study-time'>18:30~20:00</span>");
-block(5,20,24,"study math","수학 · 파트별 다지기<span class='study-time'>20:00~22:00</span>");
-block(5,24,27,"study chem","화학 · 기출<span class='study-time'>22:00~23:30</span>");
+block(5,14,18,"study math","수학 · 학교별 기출<span class='study-time'>17:00~19:00</span>");
+block(5,18,23,"study physics","물리 · Young/Haliday 모의고사<span class='study-time'>19:00~21:30</span>");
+block(5,23,26,"study math","수학 · 파트별 다지기<span class='study-time'>21:30~23:00</span>");
+block(5,26,28,"study chem","화학<span class='study-time'>23:00~24:00</span>");
 
 /* FRI */
-block(6,18,22,"study physics","물리 · 진도 맞춰 시험대비<span class='study-time'>19:00~21:00</span>");
-block(6,22,27,"study math","수학 · 파트별 다지기<span class='study-time'>21:00~23:30</span>");
+block(6,18,25,"study physics","물리 · 진도 맞춰 시험대비<span class='study-time'>19:00~22:30</span>");
+block(6,25,28,"study chem","화학<span class='study-time'>22:30~24:00</span>");
 
 /* weekend 3-part fixed cards */
 block(7,2,6,"study weekend","물리 현강<span class='study-time'>1부 · 07:30~12:30</span>");
@@ -519,7 +519,7 @@ render();
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js?v=5').catch(console.error);
+    navigator.serviceWorker.register('./service-worker.js?v=6').catch(console.error);
   });
 }
 </script>
