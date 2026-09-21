@@ -200,7 +200,7 @@ button{border:0;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;
 @media(max-width:1150px){.main{grid-template-columns:1fr}}
 </style>
 
-<link rel="manifest" href="./manifest.json?v=6">
+<link rel="manifest" href="./manifest.json?v=7">
 <meta name="theme-color" content="#687b61">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -388,7 +388,7 @@ block(2,22,25,"study math","수학 · 파트별 다지기<span class='study-time
 block(2,25,28,"study chem","화학<span class='study-time'>22:30~24:00</span>");
 
 /* TUE */
-block(3,18,25,"study math","수학 · 연고대 기출<span class='study-time'>19:00~22:30 · 공부시간 계산 제외</span>");
+block(3,18,25,"study math","수학 · 연고대 기출<span class='study-time'>19:00~22:30</span>");
 block(3,25,28,"study chem","화학<span class='study-time'>22:30~24:00</span>");
 
 /* WED */
@@ -519,7 +519,7 @@ render();
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js?v=6').catch(console.error);
+    navigator.serviceWorker.register('./service-worker.js?v=7').catch(console.error);
   });
 }
 </script>
