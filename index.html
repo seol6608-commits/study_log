@@ -192,15 +192,25 @@ button{border:0;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;
 .detail-item{background:#fffaf3;border:1px solid var(--line);border-radius:8px;padding:8px}
 .detail-item small{display:block;font-size:9px;color:var(--muted);font-weight:700}
 .detail-item strong{font-size:13px}
-.manual{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
-.manual input{width:100%;border:1px solid var(--line);border-radius:8px;background:#fffaf3;padding:8px;font:inherit;font-size:11px}
-.manual button{grid-column:1/-1;background:#4c514b;color:white}
+.manual{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.manual-head{grid-column:1/-1;display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:2px}
+.manual-head strong{font-size:13px}
+.manual-head span{font-size:10px;color:var(--muted);text-align:right}
+.manual label{display:flex;flex-direction:column;gap:4px;font-size:10px;font-weight:800;color:#6c655d}
+.manual input{width:100%;border:1px solid var(--line);border-radius:8px;background:#fffaf3;padding:8px;font:inherit;font-size:12px;box-sizing:border-box}
+.manual-actions{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.manual-actions button{min-height:38px}
+.manual-actions .save-edit{background:#4c514b;color:white}
+.manual-actions .delete-edit{background:#eee5dc;color:#6f5145;border:1px solid #d8c7b8}
+.day.selected{outline:3px solid #5e685b;outline-offset:-3px}
+.buttons{grid-template-columns:1fr 1fr 1fr 1fr}
+.buttons .edit{background:#d9d0c4;color:#4a443e}
 .rules{padding:13px 15px;border-left:3px solid var(--accent2);background:#ecdfd1;font-size:11px;line-height:1.6;color:#625b53}
 .footer{padding:0 28px 20px;text-align:right;font-size:10px;color:var(--muted)}
 @media(max-width:1150px){.main{grid-template-columns:1fr}}
 </style>
 
-<link rel="manifest" href="./manifest.json?v=7">
+<link rel="manifest" href="./manifest.json?v=9">
 <meta name="theme-color" content="#687b61">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -252,6 +262,7 @@ button{border:0;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;
         <div class="buttons">
           <button class="in" onclick="checkIn()">입실</button>
           <button class="out" onclick="checkOut()">퇴실</button>
+          <button class="edit" onclick="editToday()">수정</button>
           <button class="reset" onclick="resetToday()">초기화</button>
         </div>
         <div class="stats">
@@ -287,12 +298,23 @@ button{border:0;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;
           </div>
         </div>
 
-        <div class="manual">
-          <input type="date" id="manualDate">
-          <input type="number" min="0" id="manualBreak" placeholder="휴식(분)">
-          <input type="time" id="manualIn">
-          <input type="time" id="manualOut">
-          <button onclick="addManual()">수동 기록 추가</button>
+        <div class="manual" id="recordEditor">
+          <label>날짜
+            <input type="date" id="manualDate" onchange="editorDateChanged()">
+          </label>
+          <label>휴식시간(분)
+            <input type="number" min="0" step="1" id="manualBreak" placeholder="0">
+          </label>
+          <label>입실
+            <input type="time" id="manualIn">
+          </label>
+          <label>퇴실
+            <input type="time" id="manualOut">
+          </label>
+          <div class="manual-actions">
+            <button class="save-edit" onclick="saveEditedRecord()">저장</button>
+            <button class="delete-edit" onclick="deleteEditedRecord()">삭제</button>
+          </div>
         </div>
       </section>
 
@@ -444,22 +466,70 @@ function statusOf(k,r){
   return r.in<=lim?"정상":"지각";
 }
 function checkIn(){
-  const k=keyOf(new Date());records[k]=records[k]||{};records[k].in=nowTime();selectedKey=k;save();
+  const k=keyOf(new Date());records[k]=records[k]||{};records[k].in=nowTime();selectedKey=k;save();loadEditor(k);
 }
 function checkOut(){
-  const k=keyOf(new Date());records[k]=records[k]||{};records[k].out=nowTime();records[k].breakMin=records[k].breakMin||0;selectedKey=k;save();
+  const k=keyOf(new Date());records[k]=records[k]||{};records[k].out=nowTime();records[k].breakMin=records[k].breakMin||0;selectedKey=k;save();loadEditor(k);
 }
 function resetToday(){
   const k=keyOf(new Date());
-  if(confirm("오늘 기록을 초기화할까요?")){delete records[k];selectedKey=k;save()}
+  if(confirm("오늘 기록을 초기화할까요?")){delete records[k];selectedKey=k;save();loadEditor(k)}
 }
-function addManual(){
+function loadEditor(k){
+  selectedKey=k;
+  const r=records[k]||{};
+  document.getElementById("manualDate").value=k;
+  document.getElementById("manualIn").value=r.in||"";
+  document.getElementById("manualOut").value=r.out||"";
+  document.getElementById("manualBreak").value=(r.breakMin ?? "");
+}
+function editorDateChanged(){
+  const d=document.getElementById("manualDate").value;
+  if(!d)return;
+  selectedKey=d;
+  loadEditor(d);
+  renderDetail();
+  renderCalendar();
+}
+function saveEditedRecord(){
   const d=document.getElementById("manualDate").value;
   const i=document.getElementById("manualIn").value;
   const o=document.getElementById("manualOut").value;
-  const b=Number(document.getElementById("manualBreak").value||0);
-  if(!d||!i||!o){alert("날짜, 입실, 퇴실 시간을 입력해주세요.");return}
-  records[d]={in:i,out:o,breakMin:b};selectedKey=d;save();
+  const bRaw=document.getElementById("manualBreak").value;
+  const b=bRaw===""?0:Number(bRaw);
+  if(!d){alert("수정할 날짜를 선택해주세요.");return}
+  if(!i && !o){alert("입실 또는 퇴실 시간 중 하나 이상을 입력해주세요.");return}
+  if(o && !i){
+    const ok=confirm("입실 시간이 비어 있습니다. 퇴실 시간만 저장할까요?");
+    if(!ok)return;
+  }
+  if(!Number.isFinite(b) || b<0){alert("휴식시간은 0 이상의 숫자로 입력해주세요.");return}
+  const next={breakMin:Math.round(b)};
+  if(i)next.in=i;
+  if(o)next.out=o;
+  records[d]=next;
+  selectedKey=d;
+  save();
+  loadEditor(d);
+}
+function deleteEditedRecord(){
+  const d=document.getElementById("manualDate").value;
+  if(!d)return;
+  if(confirm(`${d} 기록을 삭제할까요?`)){
+    delete records[d];
+    selectedKey=d;
+    save();
+    loadEditor(d);
+  }
+}
+function editToday(){
+  const k=keyOf(new Date());
+  selectedKey=k;
+  loadEditor(k);
+  renderDetail();
+  renderCalendar();
+  const editor=document.getElementById("recordEditor");
+  if(editor)editor.scrollIntoView({behavior:"smooth",block:"center"});
 }
 function monday(d){
   const x=new Date(d),delta=(x.getDay()+6)%7;
@@ -471,7 +541,7 @@ function renderToday(){
   document.getElementById("inTime").textContent=r.in||"--:--";
   document.getElementById("outTime").textContent=r.out||"--:--";
   document.getElementById("focusTime").textContent=fmt(focus(r));
-  document.getElementById("manualDate").value=k;
+  document.getElementById("manualDate").max=k;
 }
 function renderStats(){
   const now=new Date(),ws=monday(now),we=new Date(ws);we.setDate(we.getDate()+6);
@@ -501,11 +571,17 @@ function renderCalendar(){
     else if(st==="미입실"){cls="miss";badge="미입실"}
     if(dt>today)cls+=" future";
     if(k===keyOf(today))cls+=" today";
+    if(k===selectedKey)cls+=" selected";
     html+=`<div class="day ${cls}" onclick="selectDay('${k}')">${d}${badge?`<span class="badge">${badge}</span>`:""}</div>`;
   }
   calendar.innerHTML=html;
 }
-function selectDay(k){selectedKey=k;renderDetail()}
+function selectDay(k){
+  selectedKey=k;
+  loadEditor(k);
+  renderDetail();
+  renderCalendar();
+}
 function renderDetail(){
   const r=records[selectedKey]||{},st=statusOf(selectedKey,r),d=new Date(selectedKey+"T00:00:00");
   detailTitle.textContent=`${d.getMonth()+1}월 ${d.getDate()}일`;
@@ -514,12 +590,13 @@ function renderDetail(){
 }
 function render(){renderToday();renderStats();renderCalendar();renderDetail()}
 render();
+loadEditor(selectedKey);
 </script>
 
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js?v=7').catch(console.error);
+    navigator.serviceWorker.register('./service-worker.js?v=9').catch(console.error);
   });
 }
 </script>
